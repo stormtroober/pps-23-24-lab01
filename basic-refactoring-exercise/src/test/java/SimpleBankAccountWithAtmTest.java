@@ -4,30 +4,25 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import example.model.AccountHolder;
-import example.model.BankAccount;
 import example.model.SimpleBankAccountWithAtm;
 
-public class SimpleBankAccountWithAtmTest {
-    private AccountHolder accountHolder;
-    private BankAccount bankAccount;
+public class SimpleBankAccountWithAtmTest extends SimpleBankAccountTest{
 
+    @Override
     @BeforeEach
     void beforeEach(){
         accountHolder = new AccountHolder("Mario", "Rossi", 1);
         bankAccount = new SimpleBankAccountWithAtm(accountHolder, 0, 1);
     }
 
-    @Test
-    void testInitialBalance() {
-        assertEquals(0, bankAccount.getBalance());
-    }
-
+    @Override
     @Test
     void testDeposit() {
         bankAccount.deposit(accountHolder.getId(), 100);
         assertEquals(99, bankAccount.getBalance());
     }
 
+    @Override
     @Test
     void testWrongDeposit() {
         bankAccount.deposit(accountHolder.getId(), 100);
@@ -35,6 +30,7 @@ public class SimpleBankAccountWithAtmTest {
         assertEquals(99, bankAccount.getBalance());
     }
 
+    @Override
     @Test
     void testWithdraw() {
         bankAccount.deposit(accountHolder.getId(), 100);
@@ -42,6 +38,7 @@ public class SimpleBankAccountWithAtmTest {
         assertEquals(28, bankAccount.getBalance());
     }
 
+    @Override
     @Test
     void testWrongWithdraw() {
         bankAccount.deposit(accountHolder.getId(), 100);
