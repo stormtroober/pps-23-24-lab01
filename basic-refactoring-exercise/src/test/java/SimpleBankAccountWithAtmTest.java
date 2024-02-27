@@ -8,41 +8,44 @@ import example.model.SimpleBankAccountWithAtm;
 
 public class SimpleBankAccountWithAtmTest extends SimpleBankAccountTest{
 
+    private double fee = 1.0;
+    private double amountTest = 100.0;
+
     @Override
     @BeforeEach
     void beforeEach(){
         accountHolder = new AccountHolder("Mario", "Rossi", 1);
-        bankAccount = new SimpleBankAccountWithAtm(accountHolder, 0, 1);
+        bankAccount = new SimpleBankAccountWithAtm(accountHolder, 0, fee);
     }
 
     @Override
     @Test
     void testDeposit() {
-        bankAccount.deposit(accountHolder.getId(), 100);
-        assertEquals(99, bankAccount.getBalance());
+        bankAccount.deposit(accountHolder.getId(), amountTest);
+        assertEquals(amountTest - fee, bankAccount.getBalance());
     }
 
     @Override
     @Test
     void testWrongDeposit() {
-        bankAccount.deposit(accountHolder.getId(), 100);
-        bankAccount.deposit(2, 50);
-        assertEquals(99, bankAccount.getBalance());
+        bankAccount.deposit(accountHolder.getId(), amountTest);
+        bankAccount.deposit(2, amountTest);
+        assertEquals(amountTest - fee, bankAccount.getBalance());
     }
 
     @Override
     @Test
     void testWithdraw() {
-        bankAccount.deposit(accountHolder.getId(), 100);
-        bankAccount.withdraw(accountHolder.getId(), 70);
-        assertEquals(28, bankAccount.getBalance());
+        bankAccount.deposit(accountHolder.getId(), amountTest);
+        bankAccount.withdraw(accountHolder.getId(), amountTest / 2);
+        assertEquals(amountTest - (amountTest / 2) - (fee*2), bankAccount.getBalance());
     }
 
     @Override
     @Test
     void testWrongWithdraw() {
-        bankAccount.deposit(accountHolder.getId(), 100);
+        bankAccount.deposit(accountHolder.getId(), amountTest);
         bankAccount.withdraw(2, 70);
-        assertEquals(99, bankAccount.getBalance());
+        assertEquals(amountTest - fee, bankAccount.getBalance());
     }
 }
