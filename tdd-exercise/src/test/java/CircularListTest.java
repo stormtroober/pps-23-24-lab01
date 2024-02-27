@@ -1,14 +1,12 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import tdd.CircularList;
-import tdd.CircularListImpl;
+import tdd.CircularListImplementation;
 
 /**
  * The test suite for testing the CircularList implementation
@@ -16,34 +14,30 @@ import tdd.CircularListImpl;
 public class CircularListTest {
 
     private CircularList list;
+    private int number = 10;
 
     @BeforeEach
     void initList(){
-        list = new CircularListImpl();
+        list = new CircularListImplementation();
     }
 
     @Test
     void addItemToList(){
-        assertTrue(list.isEmpty());
-        list.add(-10);
-        assertFalse(list.isEmpty());
+        genList(number);
+        assertTrue(!list.isEmpty());
     }
 
     @Test
     void getListSize(){
-        list.add(10);
-        assertEquals(list.size(), 1);
-    }
-
-    @Test
-    void isTheListEmpty(){
-        assertTrue(list.isEmpty());
+        genList(number);
+        assertEquals(list.size(), number);
     }
 
     @Test
     void isTheNextElement(){
-        list.add(10);
-        assertEquals(list.next().get(), 10);
+        genList(number);
+        list.next();
+        assertEquals(list.next(), Optional.of(number));
     }
 
     @Test
@@ -52,12 +46,31 @@ public class CircularListTest {
     }
 
     @Test
-    void isThePreviousElement(){
-        list.add(10);
+    void testPreviousWithEmptyList(){
         assertEquals(list.previous(), Optional.empty());
-        list.add(2);
+    }
+
+    @Test
+    void testPreviousWithElements(){
+        genList(number);
         list.next();
-        assertEquals(list.previous(), Optional.of(10));
+        list.next();
+        assertEquals(list.previous(), Optional.of(number));
+    }
+
+    @Test
+    void resetCursor(){
+        genList(number);
+        list.next();
+        list.reset();
+        list.next();
+        assertEquals(list.next(), Optional.of(number));
+    }
+
+    private void genList(int size){
+        for(int i = 0; i < size; i++){
+            list.add(number * i);
+        }
     }
 
 }
